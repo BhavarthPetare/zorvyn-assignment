@@ -1,0 +1,48 @@
+// store/useDashboardStore.ts
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import { initialTransactions } from '../lib/mockData';
+
+// 1. Define the exact shape of a single transaction
+export interface Transaction {
+  id: number;
+  date: string;
+  description: string;
+  category: string;
+  type: 'income' | 'expense';
+  amount: number;
+}
+
+// 2. Define the shape of your entire Zustand store
+interface DashboardState {
+  transactions: Transaction[];
+  role: 'Viewer' | 'Admin';
+  toggleRole: () => void;
+  addTransaction: (transaction: Transaction) => void;
+  deleteTransaction: (id: number) => void;
+}
+
+// 3. Pass the DashboardState interface into the create function
+export const useDashboardStore = create<DashboardState>()(
+  persist(
+    (set) => ({
+      transactions: initialTransactions as Transaction[],
+      role: 'Viewer',
+      
+      toggleRole: () => set((state) => ({ 
+        role: state.role === 'Viewer' ? 'Admin' : 'Viewer' 
+      })),
+      
+      addTransaction: (newTransaction) => set((state) => ({
+        transactions: [newTransaction, ...state.transactions]
+      })),
+
+      deleteTransaction: (id) => set((state) => ({
+        transactions: state.transactions.filter(t => t.id !== id)
+      }))
+    }),
+    {
+      name: 'finance-dashboard-storage',
+    }
+  )
+);
