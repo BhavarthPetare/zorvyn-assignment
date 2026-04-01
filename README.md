@@ -13,8 +13,8 @@ A clean, responsive, and interactive frontend finance dashboard built to track, 
     *Spending Breakdown:* A categorical Doughnut chart visualizing expense distribution.
 * **Transactions Management:** A searchable, filterable data table displaying all financial history.
 * **Role-Based Access Control (RBAC) Simulation:**
-    * **Viewer:** Read-only access to dashboard data and transactions.
-    * **Admin:** Full access to add new transactions and delete existing ones. UI dynamically updates based on the active role.
+  * **Viewer:** Read-only access to dashboard data and transactions.
+  * **Admin:** Full access to add new transactions and delete existing ones. UI dynamically updates based on the active role.
 * **Smart Insights:** Auto-calculated analytics showing the highest spending category, the largest single transaction, and the user's current savings rate.
 * **Data Persistence:** Application state is preserved across page reloads using browser Local Storage.
 
