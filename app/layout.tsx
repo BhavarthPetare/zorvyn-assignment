@@ -1,5 +1,6 @@
 import './globals.css';
 import Navbar from '../components/Navbar';
+import Toast from '../components/Toast';
 import React from 'react';
 
 export const metadata = {
@@ -20,6 +21,7 @@ export default function RootLayout({
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {children}
         </main>
+        <Toast />
       </body>
     </html>
   );

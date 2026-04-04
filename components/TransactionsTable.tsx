@@ -2,12 +2,15 @@
 
 import { useState } from 'react';
 import { useDashboardStore } from '../store/useDashboardStore';
-import { Search, Trash2, Plus, Receipt } from 'lucide-react';
+import { Search, Trash2, Plus, Receipt, ArrowUpDown } from 'lucide-react'; // <-- Added ArrowUpDown
 import { motion } from 'framer-motion';
 
 export default function TransactionsTable() {
-  const { transactions, role, addTransaction, deleteTransaction } = useDashboardStore();
+  const { transactions, role, addTransaction, deleteTransaction, showToast } = useDashboardStore();
   const [searchTerm, setSearchTerm] = useState('');
+  
+  // 1. Added Sort State ('desc' = Newest first, 'asc' = Oldest first)
+  const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
   
   const [newTx, setNewTx] = useState({
     description: '',
@@ -17,10 +20,18 @@ export default function TransactionsTable() {
     date: new Date().toISOString().split('T')[0],
   });
 
+  // 2. Filter first (by search term)
   const filteredTransactions = transactions.filter((t) =>
     t.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
     t.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // 3. Then Sort the filtered results by Date
+  const sortedTransactions = [...filteredTransactions].sort((a, b) => {
+    const dateA = new Date(a.date).getTime();
+    const dateB = new Date(b.date).getTime();
+    return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+  });
 
   const handleAddTransaction = (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,31 +47,43 @@ export default function TransactionsTable() {
     });
 
     setNewTx({ ...newTx, description: '', amount: '', category: '' });
+    showToast('Transaction added successfully!', 'success');
   };
 
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.4, type: "spring", stiffness: 300 }}
+      transition={{ delay: 0.6, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       className="bg-card rounded-2xl border border-borderMain shadow-sm overflow-hidden mb-8"
     >
-      {/* Header & Search */}
+      {/* Header, Search & Sort */}
       <div className="p-6 border-b border-borderMain flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <h3 className="text-lg font-bold text-textMain flex items-center gap-2">
           <Receipt className="w-5 h-5 text-indigo-500" />
           Transaction History
         </h3>
         
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted w-4 h-4" />
-          <input
-            type="text"
-            placeholder="Search transactions..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9 pr-4 py-2 bg-main border border-borderMain rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all w-full sm:w-72 text-textMain placeholder-muted"
-          />
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <div className="relative flex-1 sm:w-72">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted w-4 h-4" />
+            <input
+              type="text"
+              placeholder="Search transactions..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-9 pr-4 py-2 bg-main border border-borderMain rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all w-full text-textMain placeholder-muted"
+            />
+          </div>
+          
+          {/* SORT TOGGLE BUTTON */}
+          <button
+            onClick={() => setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')}
+            className="p-2.5 bg-main border border-borderMain rounded-xl text-muted hover:text-textMain hover:bg-borderMain transition-colors flex items-center justify-center"
+            title={sortOrder === 'desc' ? "Showing Newest First" : "Showing Oldest First"}
+          >
+            <ArrowUpDown className="w-4 h-4" />
+          </button>
         </div>
       </div>
 
@@ -99,13 +122,14 @@ export default function TransactionsTable() {
 
       {/* --- MOBILE VIEW: Card Layout --- */}
       <div className="block md:hidden divide-y divide-borderMain bg-card">
-        {filteredTransactions.length === 0 ? (
+        {/* WE MAP OVER sortedTransactions NOW */}
+        {sortedTransactions.length === 0 ? (
           <div className="py-12 text-center text-muted flex flex-col items-center justify-center gap-2">
             <Receipt className="w-8 h-8 opacity-20" />
             <p>No transactions found.</p>
           </div>
         ) : (
-          filteredTransactions.map((tx) => (
+          sortedTransactions.map((tx) => (
             <div key={tx.id} className="p-5 hover:bg-main/50 transition-colors flex items-center justify-between">
               <div className="flex flex-col gap-1">
                 <span className="font-bold text-textMain">{tx.description}</span>
@@ -123,7 +147,7 @@ export default function TransactionsTable() {
                 
                 {role === 'Admin' && (
                   <button 
-                    onClick={() => deleteTransaction(tx.id)}
+                    onClick={() => { deleteTransaction(tx.id); showToast('Transaction removed', 'error'); }}
                     className="text-muted hover:text-rose-500 transition-colors p-2 bg-main rounded-lg hover:bg-rose-500/10"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -148,7 +172,8 @@ export default function TransactionsTable() {
             </tr>
           </thead>
           <tbody className="divide-y divide-borderMain">
-            {filteredTransactions.length === 0 ? (
+            {/* WE MAP OVER sortedTransactions NOW */}
+            {sortedTransactions.length === 0 ? (
               <tr>
                 <td colSpan={role === 'Admin' ? 5 : 4} className="px-6 py-12 text-center text-muted">
                   <div className="flex flex-col items-center justify-center gap-2">
@@ -158,7 +183,7 @@ export default function TransactionsTable() {
                 </td>
               </tr>
             ) : (
-              filteredTransactions.map((tx) => (
+              sortedTransactions.map((tx) => (
                 <tr key={tx.id} className="hover:bg-main/50 transition-colors group">
                   <td className="px-6 py-4 whitespace-nowrap text-muted font-medium">{tx.date}</td>
                   <td className="px-6 py-4 font-bold text-textMain">{tx.description}</td>
@@ -173,7 +198,7 @@ export default function TransactionsTable() {
                   {role === 'Admin' && (
                     <td className="px-6 py-4 text-center">
                       <button 
-                        onClick={() => deleteTransaction(tx.id)}
+                        onClick={() => { deleteTransaction(tx.id); showToast('Transaction removed', 'error'); }}
                         className="text-muted hover:text-rose-500 transition-colors p-1.5 rounded-md hover:bg-rose-500/10"
                         title="Delete Transaction"
                       >

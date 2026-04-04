@@ -41,11 +41,11 @@ export default function DashboardCharts() {
         {
           data: Object.values(grouped),
           backgroundColor: [
-            'rgba(99, 102, 241, 0.85)',  // indigo-500
-            'rgba(14, 165, 233, 0.85)',  // sky-500
-            'rgba(244, 63, 94, 0.85)',   // rose-500
-            'rgba(245, 158, 11, 0.85)',  // amber-500
-            'rgba(16, 185, 129, 0.85)',  // emerald-500
+            'rgba(99, 102, 241, 0.85)',
+            'rgba(14, 165, 233, 0.85)',
+            'rgba(244, 63, 94, 0.85)',
+            'rgba(245, 158, 11, 0.85)',
+            'rgba(16, 185, 129, 0.85)',
           ],
           borderWidth: 0,
           hoverOffset: 4,
@@ -72,13 +72,13 @@ export default function DashboardCharts() {
         {
           label: 'Income',
           data: incomeData,
-          backgroundColor: 'rgba(16, 185, 129, 0.9)', // emerald-500
+          backgroundColor: 'rgba(16, 185, 129, 0.9)',
           borderRadius: 4,
         },
         {
           label: 'Expenses',
           data: expenseData,
-          backgroundColor: 'rgba(244, 63, 94, 0.9)', // rose-500
+          backgroundColor: 'rgba(244, 63, 94, 0.9)',
           borderRadius: 4,
         },
       ],
@@ -87,9 +87,9 @@ export default function DashboardCharts() {
 
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.2, type: "spring", stiffness: 300 }}
+      transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       className="grid grid-cols-1 lg:grid-cols-2 gap-6"
     >
       <div className="bg-card p-6 rounded-2xl border border-borderMain shadow-sm hover:shadow-md transition-shadow">

@@ -35,9 +35,9 @@ export default function InsightsSection() {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.3, type: "spring", stiffness: 300 }}
+      transition={{ delay: 0.45, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
     >
       <h3 className="text-lg font-bold text-textMain mb-4 flex items-center gap-2">
         <Lightbulb className="w-5 h-5 text-amber-500" />

@@ -11,7 +11,9 @@ A clean, responsive, and interactive frontend finance dashboard built to track, 
 * **Dashboard Overview:** Dynamic summary cards calculating Total Balance, Income, and Expenses in real-time.
 * **Data Visualizations:** * *Cash Flow Trend:* A time-based Bar chart comparing income vs. expenses.
     *Spending Breakdown:* A categorical Doughnut chart visualizing expense distribution.
-* **Transactions Management:** A searchable, filterable data table displaying all financial history.
+* **Transactions Management:** A searchable, sortable (by date), and filterable data table displaying all financial history.
+* **Custom Theme Engine (Dark/Light Mode):** Built a scalable, enterprise-grade dark mode using native CSS variables mapped to Tailwind configuration, complete with an animated toggle.
+* **Micro-Interactions & UX Polish:** Utilized Framer Motion for buttery-smooth page load staggered animations, spring-physics UI toggles, and dynamic toast notifications for user actions.
 * **Role-Based Access Control (RBAC) Simulation:**
   * **Viewer:** Read-only access to dashboard data and transactions.
   * **Admin:** Full access to add new transactions and delete existing ones. UI dynamically updates based on the active role.
@@ -28,6 +30,7 @@ To ensure high performance, maintainability, and an excellent developer experien
 * **Data Persistence:** Zustand's `persist` middleware - Automatically syncs the global store to `localStorage` to fulfill the optional data persistence enhancement without requiring a backend.
 * **Charts:** Chart.js & react-chartjs-2 - Used for robust, responsive, and highly customizable data visualizations.
 * **Icons:** Lucide React - Clean, consistent iconography.
+* **Animations:** Framer Motion - Used to implement spring-physics toggles, staggered entrance animations, and seamless toast notification mount/unmount lifecycles.
 
 ## 📦 Getting Started
 
@@ -62,6 +65,6 @@ Ensure you have Node.js (v18+) and npm installed on your machine.
 
 Given more time, I would expand this project by implementing:
 
-1. **System Dark Mode:** Utilizing Tailwind's dark: variants.
-2. **Export Functionality:** Adding a utility to download the transactions array as a CSV file.
-3. **Pagination:** Implementing pagination on the transactions table for better performance with massive datasets.
+1. **Export Functionality:** Adding a utility to download the transactions array as a CSV or PDF report.
+2. **Advanced Data Grouping:** Allowing users to group the data table by specific categories or months.
+3. **Pagination & Virtualization:** Implementing pagination or a virtualized list on the transactions table to maintain 60fps rendering performance with massive, multi-year datasets.

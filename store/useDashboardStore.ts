@@ -20,8 +20,13 @@ interface DashboardState {
   toggleRole: () => void;
   addTransaction: (transaction: Transaction) => void;
   deleteTransaction: (id: number) => void;
+
   theme: 'light' | 'dark';
   toggleTheme: () => void;
+
+  toast: { message: string; type: 'success' | 'error' | null };
+  showToast: (message: string, type: 'success' | 'error') => void;
+  hideToast: () => void;
 }
 
 // 3. Pass the DashboardState interface into the create function
@@ -31,6 +36,7 @@ export const useDashboardStore = create<DashboardState>()(
       transactions: initialTransactions as Transaction[],
       role: 'Viewer',
       theme: 'light',
+      toast: {message: '', type: null},
       
       toggleRole: () => set((state) => ({ 
         role: state.role === 'Viewer' ? 'Admin' : 'Viewer' 
@@ -46,7 +52,15 @@ export const useDashboardStore = create<DashboardState>()(
 
       toggleTheme: () => set((state) => ({
         theme: state.theme === 'light' ? 'dark' : 'light'
-      }))
+      })),
+
+      showToast: (message, type) => {
+        set({ toast: { message, type } });
+        setTimeout(() => {
+          set({ toast: { message: '', type: null } });
+        }, 3000);
+      },
+      hideToast: () => set({ toast: { message: '', type: null } }),
     }),
     {
       name: 'finance-dashboard-storage',
