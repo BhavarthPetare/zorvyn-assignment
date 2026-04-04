@@ -14,8 +14,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      {/* Explicitly forcing light mode colors to prevent Next.js default dark mode clashes */}
-      <body className="bg-slate-50 min-h-screen font-sans text-slate-900 antialiased selection:bg-blue-200">
+      {/* Replaced hardcoded slate colors with dynamic variables */}
+      <body className="bg-main text-textMain min-h-screen font-sans antialiased transition-colors duration-300">
         <Navbar />
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {children}

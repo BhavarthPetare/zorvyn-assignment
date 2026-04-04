@@ -1,7 +1,7 @@
-// store/useDashboardStore.ts
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { initialTransactions } from '../lib/mockData';
+
 
 // 1. Define the exact shape of a single transaction
 export interface Transaction {
@@ -20,6 +20,8 @@ interface DashboardState {
   toggleRole: () => void;
   addTransaction: (transaction: Transaction) => void;
   deleteTransaction: (id: number) => void;
+  theme: 'light' | 'dark';
+  toggleTheme: () => void;
 }
 
 // 3. Pass the DashboardState interface into the create function
@@ -28,6 +30,7 @@ export const useDashboardStore = create<DashboardState>()(
     (set) => ({
       transactions: initialTransactions as Transaction[],
       role: 'Viewer',
+      theme: 'light',
       
       toggleRole: () => set((state) => ({ 
         role: state.role === 'Viewer' ? 'Admin' : 'Viewer' 
@@ -39,6 +42,10 @@ export const useDashboardStore = create<DashboardState>()(
 
       deleteTransaction: (id) => set((state) => ({
         transactions: state.transactions.filter(t => t.id !== id)
+      })),
+
+      toggleTheme: () => set((state) => ({
+        theme: state.theme === 'light' ? 'dark' : 'light'
       }))
     }),
     {

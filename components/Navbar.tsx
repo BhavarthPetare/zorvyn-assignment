@@ -1,34 +1,81 @@
 'use client';
 
+import { useEffect } from 'react'; // <-- Add this import
 import { useDashboardStore } from '../store/useDashboardStore';
-import { Shield, User, LayoutDashboard } from 'lucide-react';
+import { Shield, User, LayoutDashboard, Sun, Moon } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Navbar() {
-  const { role, toggleRole } = useDashboardStore();
+  const { role, toggleRole, theme, toggleTheme } = useDashboardStore();
+  const isAdmin = role === 'Admin';
+  const isDark = theme === 'dark';
+
+  // <-- ADD THIS EFFECT: It syncs Zustand to the HTML tag
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
 
   return (
-    <nav className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200 px-6 py-4 flex justify-between items-center shadow-sm">
+    <nav className="bg-card/80 backdrop-blur-md sticky top-0 z-50 border-b border-borderMain px-4 sm:px-6 py-4 flex justify-between items-center shadow-sm transition-colors duration-300">
+      
+      {/* Logo Section */}
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 bg-linear-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-md text-white">
+        <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-xl flex items-center justify-center shadow-md text-white">
           <LayoutDashboard className="w-5 h-5" />
         </div>
-        <h1 className="text-xl font-bold bg-clip-text text-transparent bg-linear-to-r from-slate-800 to-slate-600">
+        <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-textMain to-muted hidden sm:block">
           FinanceFlow
         </h1>
       </div>
 
-      <div className="flex items-center gap-6">
-        <div className="flex items-center gap-2 text-sm font-medium px-3 py-1.5 bg-slate-100 rounded-full text-slate-600">
-          {role === 'Admin' ? <Shield className="w-4 h-4 text-indigo-600" /> : <User className="w-4 h-4 text-slate-400" />}
-          <span>{role}</span>
-        </div>
-        
+      <div className="flex items-center gap-4">
+        {/* Animated Dark/Light Mode Toggle */}
         <button
-          onClick={toggleRole}
-          className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium rounded-lg transition-all shadow-sm hover:shadow active:scale-95"
+          onClick={toggleTheme}
+          className="relative flex items-center justify-center w-10 h-10 rounded-full bg-main border border-borderMain text-textMain hover:bg-borderMain transition-colors"
+          aria-label="Toggle Dark Mode"
         >
-          Switch to {role === 'Viewer' ? 'Admin' : 'Viewer'}
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={theme}
+              initial={{ y: -20, opacity: 0, rotate: -90 }}
+              animate={{ y: 0, opacity: 1, rotate: 0 }}
+              exit={{ y: 20, opacity: 0, rotate: 90 }}
+              transition={{ duration: 0.2 }}
+            >
+              {isDark ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
+            </motion.div>
+          </AnimatePresence>
         </button>
+
+        {/* Animated Role Toggle */}
+        <div
+          onClick={toggleRole}
+          className="relative flex items-center bg-main border border-borderMain hover:brightness-95 rounded-full p-1 cursor-pointer w-48 h-10 shadow-inner transition-colors"
+          role="button"
+          tabIndex={0}
+        >
+          <motion.div
+            className="absolute left-1 top-1 bottom-1 w-[calc(50%-4px)] bg-card rounded-full shadow-md"
+            initial={false}
+            animate={{ x: isAdmin ? "100%" : "0%" }}
+            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+          />
+
+          <div className={`relative z-10 flex flex-1 items-center justify-center gap-1.5 text-sm font-bold transition-colors duration-300 ${!isAdmin ? 'text-textMain' : 'text-muted'}`}>
+            <User className="w-4 h-4" />
+            <span>Viewer</span>
+          </div>
+
+          <div className={`relative z-10 flex flex-1 items-center justify-center gap-1.5 text-sm font-bold transition-colors duration-300 ${isAdmin ? 'text-indigo-500' : 'text-muted'}`}>
+            <Shield className="w-4 h-4" />
+            <span>Admin</span>
+          </div>
+        </div>
       </div>
     </nav>
   );

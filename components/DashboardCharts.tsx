@@ -13,6 +13,7 @@ import {
   ArcElement,
 } from 'chart.js';
 import { Bar, Doughnut } from 'react-chartjs-2';
+import { motion } from 'framer-motion';
 
 ChartJS.register(
   CategoryScale,
@@ -85,20 +86,25 @@ export default function DashboardCharts() {
   }, [transactions]);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-        <h3 className="text-lg font-bold text-slate-800 mb-6">Cash Flow Trend</h3>
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.2, type: "spring", stiffness: 300 }}
+      className="grid grid-cols-1 lg:grid-cols-2 gap-6"
+    >
+      <div className="bg-card p-6 rounded-2xl border border-borderMain shadow-sm hover:shadow-md transition-shadow">
+        <h3 className="text-lg font-bold text-textMain mb-6">Cash Flow Trend</h3>
         <div className="h-64 flex items-center justify-center">
           <Bar data={barData} options={{ maintainAspectRatio: false, responsive: true }} />
         </div>
       </div>
 
-      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-        <h3 className="text-lg font-bold text-slate-800 mb-6">Spending Breakdown</h3>
+      <div className="bg-card p-6 rounded-2xl border border-borderMain shadow-sm hover:shadow-md transition-shadow">
+        <h3 className="text-lg font-bold text-textMain mb-6">Spending Breakdown</h3>
         <div className="h-64 flex items-center justify-center">
           <Doughnut data={doughnutData} options={{ maintainAspectRatio: false, responsive: true, cutout: '70%' }} />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
