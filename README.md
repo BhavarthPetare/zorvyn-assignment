@@ -2,15 +2,12 @@
 
 A clean, responsive, and interactive frontend finance dashboard built to track, visualize, and manage financial activity. This project was developed as a frontend engineering assignment, focusing on UI/UX design, state management, and component architecture.
 
-## 🚀 Live Demo
-
-* (Optional: If you deploy this to Vercel or Netlify, paste the link here)*
-
 ## ✨ Core Features & Functionality
 
 * **Dashboard Overview:** Dynamic summary cards calculating Total Balance, Income, and Expenses in real-time.
-* **Data Visualizations:** * *Cash Flow Trend:* A time-based Bar chart comparing income vs. expenses.
-    *Spending Breakdown:* A categorical Doughnut chart visualizing expense distribution.
+* **Data Visualizations:**
+  * **Cash Flow Trend:** A time-based Bar chart comparing income vs. expenses.
+  * **Spending Breakdown:** A categorical Doughnut chart visualizing expense distribution.
 * **Transactions Management:** A searchable, sortable (by date), and filterable data table displaying all financial history.
 * **Custom Theme Engine (Dark/Light Mode):** Built a scalable, enterprise-grade dark mode using native CSS variables mapped to Tailwind configuration, complete with an animated toggle.
 * **Micro-Interactions & UX Polish:** Utilized Framer Motion for buttery-smooth page load staggered animations, spring-physics UI toggles, and dynamic toast notifications for user actions.
@@ -42,7 +39,6 @@ Ensure you have Node.js (v18+) and npm installed on your machine.
 
 1. **Clone the repository:**
    git clone <https://github.com/BhavarthPetare/zorvyn-assignment>
-   cd finance-dashboard
 
 2. **Install dependencies:**
    npm install
@@ -60,11 +56,3 @@ Ensure you have Node.js (v18+) and npm installed on your machine.
 * **Component Modularity:** The UI is broken down into distinct, single-responsibility components (SummaryCards, DashboardCharts, InsightsSection, TransactionsTable). This makes the codebase scalable and easy to test.
 * **Performance:** Used React's `useMemo` hook within the DashboardCharts component to prevent unnecessary recalculations of the charting datasets during re-renders.
 * **Graceful Degradation:** The UI handles "empty states" gracefully. If an Admin deletes all transactions, the charts and tables display clean fallback states rather than breaking.
-
-## 🔮 Future Enhancements
-
-Given more time, I would expand this project by implementing:
-
-1. **Export Functionality:** Adding a utility to download the transactions array as a CSV or PDF report.
-2. **Advanced Data Grouping:** Allowing users to group the data table by specific categories or months.
-3. **Pagination & Virtualization:** Implementing pagination or a virtualized list on the transactions table to maintain 60fps rendering performance with massive, multi-year datasets.
